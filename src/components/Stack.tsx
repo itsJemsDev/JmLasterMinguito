@@ -34,6 +34,7 @@ const categories = [
     label: "Frameworks",
     items: [
       { name: "Laravel", icon: "https://cdn.simpleicons.org/laravel/FF2D20" },
+      { name: "CodeIgniter 4", icon: "https://cdn.simpleicons.org/codeigniter/DD4814" },
       { name: "Node.js", icon: "https://cdn.simpleicons.org/nodedotjs/5FA04E" },
     ],
   },

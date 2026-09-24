@@ -4,7 +4,6 @@ import "./globals.css";
 import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Chatbot from "@/components/Chatbot";
 import Loader from "@/components/Loader";
 
 const geistSans = Geist({
@@ -44,7 +43,6 @@ export default function RootLayout({
           <main>{children}</main>
         </ScrollRevealProvider>
         <Footer />
-        <Chatbot />
       </body>
     </html>
   );

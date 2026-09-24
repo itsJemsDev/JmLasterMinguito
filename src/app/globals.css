@@ -75,12 +75,6 @@ body {
 .projects-carousel::-webkit-scrollbar { display: none; }
 .projects-carousel.grabbing { cursor: grabbing; scroll-behavior: auto; }
 
-/* ===== Chatbot slide up ===== */
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* ===== Section Spacing ===== */
 .section {
   padding: 40px 0;
