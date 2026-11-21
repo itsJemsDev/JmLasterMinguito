@@ -81,6 +81,7 @@ body {
 /* ===== Section Spacing ===== */
 .section {
   padding: 40px 0;
+  scroll-margin-top: 96px;
 }
 @media (max-width: 768px) {
   .section {

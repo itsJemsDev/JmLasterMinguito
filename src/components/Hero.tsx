@@ -34,7 +34,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="hero-section flex items-start pt-20 md:pt-[80px]"
+      className="hero-section flex items-start pt-28 md:pt-[112px]"
     >
       <div className="max-w-[1000px] mx-auto px-6 md:px-6 w-full">
         <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-10">
