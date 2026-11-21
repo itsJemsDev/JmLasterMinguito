@@ -19,16 +19,16 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const TO_EMAIL = "jmlasterminguito@gmail.com";
 
 function validateContact(data: ContactRequest): string | null {
-  const name = data.name?.trim();
-  const email = data.email?.trim();
-  const message = data.message?.trim();
+  const name = typeof data.name === "string" ? data.name.trim() : "";
+  const email = typeof data.email === "string" ? data.email.trim() : "";
+  const message = typeof data.message === "string" ? data.message.trim() : "";
 
   if (!name || name.length < 1 || name.length > 100) {
     return "Name is required and must be under 100 characters.";
   }
 
-  if (!email || !EMAIL_REGEX.test(email)) {
-    return "A valid email address is required.";
+  if (!email || email.length > 254 || !EMAIL_REGEX.test(email)) {
+    return "Enter a valid email address under 255 characters.";
   }
 
   if (!message || message.length < 1 || message.length > 5000) {
@@ -49,6 +49,13 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
+  if (!body || typeof body !== "object" || Array.isArray(body)) {
+    return NextResponse.json(
+      { success: false, message: "Invalid request body." },
+      { status: 400 }
+    );
+  }
+
   const validationError = validateContact(body);
   if (validationError) {
     return NextResponse.json(
@@ -57,7 +64,7 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  const captchaToken = body.captchaToken?.trim();
+  const captchaToken = typeof body.captchaToken === "string" ? body.captchaToken.trim() : "";
   if (!captchaToken) {
     return NextResponse.json(
       { success: false, message: "Please complete the reCAPTCHA." },

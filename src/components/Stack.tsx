@@ -60,7 +60,7 @@ export default function Stack() {
   return (
     <section id="stack" className="section reveal">
       <div className="max-w-[1000px] mx-auto px-6">
-        <h2 className="font-[family-name:var(--font-sans)] text-[1.5rem] font-semibold mb-10 tracking-tight relative inline-block">
+        <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Tech Stack
           <span className="absolute -bottom-2 left-0 w-12 h-[3px] bg-[var(--color-accent)] rounded-full" />
         </h2>

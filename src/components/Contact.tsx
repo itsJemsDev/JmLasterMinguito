@@ -8,7 +8,7 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [captchaError, setCaptchaError] = useState("");
+  const [formError, setFormError] = useState("");
   const captchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export default function Contact() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormError("");
   };
 
   const siteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
@@ -36,11 +37,11 @@ export default function Contact() {
     e.preventDefault();
     if (isSubmitting) return;
 
-    setCaptchaError("");
+    setFormError("");
     const captchaToken = captchaRef.current?.getValue();
 
     if (!captchaToken) {
-      setCaptchaError("Please complete the reCAPTCHA.");
+      setFormError("Please complete the reCAPTCHA.");
       return;
     }
 
@@ -56,7 +57,7 @@ export default function Contact() {
       const result = (await response.json()) as { success: boolean; message: string };
 
       if (!response.ok || !result.success) {
-        setCaptchaError(result.message || "Something went wrong. Please try again.");
+        setFormError(result.message || "Something went wrong. Please try again.");
         captchaRef.current?.reset();
         return;
       }
@@ -67,7 +68,7 @@ export default function Contact() {
       captchaRef.current?.reset();
       setTimeout(() => setSubmitted(false), 3000);
     } catch {
-      setCaptchaError("Something went wrong. Please try again.");
+      setFormError("Something went wrong. Please try again.");
       captchaRef.current?.reset();
     } finally {
       setIsSubmitting(false);
@@ -77,7 +78,7 @@ export default function Contact() {
   return (
     <section id="contact" className="section reveal">
       <div className="max-w-[1000px] mx-auto px-6">
-        <h2 className="font-[family-name:var(--font-sans)] text-[1.5rem] font-semibold mb-10 tracking-tight relative inline-block">
+        <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Let&apos;s Connect
           <span className="absolute -bottom-2 left-0 w-12 h-[3px] bg-[var(--color-accent)] rounded-full" />
         </h2>
@@ -145,6 +146,8 @@ export default function Contact() {
                     id="contact-name"
                     type="text"
                     name="name"
+                    autoComplete="name"
+                    maxLength={100}
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="Enter your full name"
@@ -161,6 +164,8 @@ export default function Contact() {
                     id="contact-email"
                     type="email"
                     name="email"
+                    autoComplete="email"
+                    maxLength={254}
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="Enter your email address"
@@ -176,6 +181,7 @@ export default function Contact() {
                   <textarea
                     id="contact-message"
                     name="message"
+                    maxLength={5000}
                     value={formData.message}
                     onChange={handleChange}
                     placeholder="Tell me about your project or inquiry"
@@ -190,7 +196,7 @@ export default function Contact() {
                     <ReCAPTCHA
                       ref={captchaRef}
                       sitekey={siteKey}
-                      theme="dark"
+                      theme="light"
                     />
                   ) : (
                     <p className="terminal-error" role="alert">
@@ -199,9 +205,9 @@ export default function Contact() {
                   )}
                 </div>
 
-                {captchaError ? (
-                  <p className="terminal-error" role="alert">
-                    {captchaError}
+                {formError ? (
+                  <p id="contact-form-error" className="terminal-error" role="alert">
+                    {formError}
                   </p>
                 ) : null}
 
@@ -209,7 +215,7 @@ export default function Contact() {
                   <button
                     type="submit"
                     className="terminal-submit-btn"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !siteKey}
                   >
                     {isSubmitting ? (
                       <span className="terminal-loading">

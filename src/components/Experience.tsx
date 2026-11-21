@@ -4,7 +4,7 @@ export default function Experience() {
   return (
     <section id="experience" className="section reveal">
       <div className="max-w-[1000px] mx-auto px-6">
-        <h2 className="font-[family-name:var(--font-sans)] text-[1.5rem] font-semibold mb-10 tracking-tight relative inline-block">
+        <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Work Experience
           <span className="absolute -bottom-2 left-0 w-12 h-[3px] bg-[var(--color-accent)] rounded-full" />
         </h2>
@@ -15,7 +15,7 @@ export default function Experience() {
             <img src="/Lumnaire.jpeg" alt="Lumnaire" className="w-6 h-6 object-contain block" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-[family-name:var(--font-sans)] text-[1.05rem] font-semibold mb-1">
+            <h3 className="font-[family-name:var(--font-sans)] text-[1rem] font-semibold mb-1">
               Lumnaire
             </h3>
             <p className="text-[0.85rem] text-[var(--color-text-muted)] tracking-tight">

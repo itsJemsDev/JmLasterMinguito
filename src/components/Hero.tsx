@@ -45,7 +45,7 @@ export default function Hero() {
               <span>OPEN FOR COMMISSION</span>
             </div>
 
-            <h1 className="font-[family-name:var(--font-sans)] text-[clamp(2rem,5vw,3rem)] font-bold tracking-tighter leading-[1.1] mb-2">
+            <h1 className="font-[family-name:var(--font-sans)] text-[clamp(1.8rem,4.5vw,2.6rem)] font-bold tracking-tighter leading-[1.1] mb-2">
               <span>Jm Laster D. </span>
               <span className="inline-flex items-center whitespace-nowrap">
                 Minguito
@@ -57,27 +57,16 @@ export default function Hero() {
               IT Student &amp; Developer
             </p>
 
-            <div className="flex flex-col gap-4 items-center md:items-start">
-              <div className="flex gap-4 flex-wrap justify-center md:justify-start">
-                <a
-                  href="#projects"
-                  className="inline-flex items-center gap-2 px-[22px] py-2.5 rounded-lg text-sm font-medium no-underline transition-all duration-200 bg-[var(--color-accent)] text-[var(--color-bg)] hover:bg-[var(--color-accent-hover)] hover:-translate-y-[1px]"
-                >
-                  View Projects
-                </a>
-                <a
-                  href="#contact"
-                  className="inline-flex items-center gap-2 px-[22px] py-2.5 rounded-md text-sm font-medium no-underline transition-all duration-200 bg-transparent text-[var(--color-text)] border-2 border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-border-hover)] hover:-translate-y-[1px]"
-                >
-                  Contact Me
-                </a>
-              </div>
-              <div className="flex gap-4 flex-wrap justify-center md:justify-start">
+            <div className="hero-actions">
+              <a href="#contact" className="hero-action-primary">
+                Contact Me
+              </a>
+              <div className="hero-resume-actions">
                 <a
                   href="/JLM_RESUME.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-[22px] py-2.5 rounded-md text-sm font-medium no-underline transition-all duration-200 bg-transparent text-[var(--color-text)] border-2 border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-border-hover)] hover:-translate-y-[1px]"
+                  className="hero-action-secondary"
                 >
                   <LucideIcon name="eye" />
                   View CV
@@ -85,7 +74,7 @@ export default function Hero() {
                 <a
                   href="/JLM_RESUME.pdf"
                   download="Jm_Laster_Minguito_CV.pdf"
-                  className="inline-flex items-center gap-2 px-[22px] py-2.5 rounded-md text-sm font-medium no-underline transition-all duration-200 bg-transparent text-[var(--color-text)] border-2 border-[var(--color-border)] hover:bg-[var(--color-bg-hover)] hover:border-[var(--color-border-hover)] hover:-translate-y-[1px]"
+                  className="hero-action-secondary"
                 >
                   <LucideIcon name="download" />
                   Download CV

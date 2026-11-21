@@ -14,21 +14,40 @@ const navLinks = [
 
 export default function Navbar() {
   const navbarRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const lastScrollY = useRef(0);
+  const scrollDirection = useRef<"up" | "down" | null>(null);
+  const directionStartY = useRef(0);
 
   useEffect(() => {
     const navbar = navbarRef.current;
     if (!navbar) return;
 
+    lastScrollY.current = window.scrollY;
+    directionStartY.current = window.scrollY;
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      const delta = currentScrollY - lastScrollY.current;
 
-      // Auto-hide navbar when scrolling down, show when scrolling up
-      if (currentScrollY > lastScrollY.current && currentScrollY > 120) {
-        navbar.classList.add("nav-hidden");
-      } else {
+      if (currentScrollY <= 80) {
         navbar.classList.remove("nav-hidden");
+        scrollDirection.current = null;
+        directionStartY.current = currentScrollY;
+      } else {
+        const nextDirection = delta > 0 ? "down" : delta < 0 ? "up" : null;
+        if (nextDirection && nextDirection !== scrollDirection.current) {
+          scrollDirection.current = nextDirection;
+          directionStartY.current = currentScrollY;
+        }
+
+        if (scrollDirection.current === "down" && currentScrollY - directionStartY.current >= 14) {
+          navbar.classList.add("nav-hidden");
+          setMobileOpen(false);
+        } else if (scrollDirection.current === "up" && directionStartY.current - currentScrollY >= 8) {
+          navbar.classList.remove("nav-hidden");
+        }
       }
       lastScrollY.current = currentScrollY;
 
@@ -38,48 +57,69 @@ export default function Navbar() {
         navbar.classList.remove("scrolled");
       }
       // Active nav link tracking
-      const sections = navLinks.map((l) => l.href.slice(1));
       const scrollY = currentScrollY + 100;
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        const link = navbar.querySelector(`a[href="#${id}"]`);
-        if (!el || !link) return;
+      let activeHref: string | null = null;
+      for (const link of navLinks) {
+        const el = document.getElementById(link.href.slice(1));
+        if (!el) continue;
         const top = el.offsetTop;
         const bottom = top + el.offsetHeight;
         if (scrollY >= top && scrollY < bottom) {
-          navbar.querySelectorAll(".nav-link-comp").forEach((l) => l.classList.remove("active"));
-          link.classList.add("active");
+          activeHref = link.href;
+          break;
         }
-      });
+      }
+      if (activeHref) {
+        const current = activeHref;
+        document.querySelectorAll<HTMLAnchorElement>(".nav-link-comp").forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === current);
+        });
+      }
     };
 
+    handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Show navbar when mobile menu opens
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    const handleResize = () => {
+      if (window.matchMedia("(min-width: 768px)").matches) setMobileOpen(false);
+    };
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (navbarRef.current?.contains(target) || mobileMenuRef.current?.contains(target)) return;
+      setMobileOpen(false);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleResize);
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [mobileOpen]);
+
   const handleMenuToggle = useCallback(() => {
-    setMobileOpen((prev) => {
-      if (!prev && navbarRef.current) {
-        navbarRef.current.classList.remove("nav-hidden");
-      }
-      return !prev;
-    });
+    setMobileOpen((prev) => !prev);
+    navbarRef.current?.classList.remove("nav-hidden");
   }, []);
 
-  // Close mobile menu on link click
-  const handleLinkClick = () => {
-    setMobileOpen(false);
-  };
+  const handleLinkClick = () => setMobileOpen(false);
 
   return (
     <>
       <nav
         ref={navbarRef}
-        className="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-48px)] max-w-[720px] md:max-w-[1000px]
-          bg-[color-mix(in_srgb,var(--color-bg-card)_80%,transparent)]
-          backdrop-blur-[16px] border border-[color-mix(in_srgb,var(--color-border)_60%,transparent)]
-          rounded-xl px-2 transition-all duration-300"
+        className="navbar-glass fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[calc(100%-48px)] max-w-[720px] md:max-w-[1000px] rounded-2xl px-2 transition-all duration-300"
       >
         <div className="flex items-center justify-between h-[52px] px-3">
           <a
@@ -103,29 +143,31 @@ export default function Navbar() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-2.5">
-            {/* Hamburger */}
-            <button
-              onClick={handleMenuToggle}
-              className="md:hidden bg-transparent border-none cursor-pointer text-[var(--color-text)] flex items-center p-1"
-              aria-label="Menu"
-            >
-              {mobileOpen ? (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="3" y1="8" x2="21" y2="8" /><line x1="3" y1="16" x2="21" y2="16" />
-                </svg>
-              )}
-            </button>
-          </div>
+          <button
+            onClick={handleMenuToggle}
+            className="md:hidden bg-transparent border-none cursor-pointer text-[var(--color-text)] flex items-center p-1"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav-links"
+          >
+            {mobileOpen ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="8" x2="21" y2="8" /><line x1="3" y1="16" x2="21" y2="16" />
+              </svg>
+            )}
+          </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`mobile-nav-links md:hidden ${mobileOpen ? "open" : ""}`}>
+      <div
+        id="mobile-nav-links"
+        ref={mobileMenuRef}
+        className={`mobile-nav-links md:hidden ${mobileOpen ? "open" : ""}`}
+      >
         {navLinks.map((link) => (
           <a
             key={link.href}
