@@ -73,7 +73,9 @@ export default function Projects() {
     const cards = carousel.querySelectorAll(".project-card-comp");
     const card = cards[index] as HTMLElement | undefined;
     if (card) {
-      carousel.scrollTo({ left: card.offsetLeft - carousel.offsetLeft, behavior: "smooth" });
+      const cardLeft = card.offsetLeft - carousel.offsetLeft;
+      const centeredLeft = cardLeft - (carousel.clientWidth - card.offsetWidth) / 2;
+      carousel.scrollTo({ left: Math.max(0, centeredLeft), behavior: "smooth" });
     }
   }, []);
 

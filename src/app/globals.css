@@ -354,9 +354,13 @@ main {
 }
 @media (max-width: 900px) {
   .projects-carousel { width: 100%; }
+  .projects-carousel {
+    padding-inline: max(8px, calc((100% - min(320px, calc(100vw - 72px))) / 2));
+  }
   .project-card-comp {
     width: min(320px, calc(100vw - 72px));
     min-width: min(280px, calc(100vw - 72px));
+    scroll-snap-align: center;
   }
   .carousel-nav-comp {
     width: 34px;
