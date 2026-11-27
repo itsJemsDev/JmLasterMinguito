@@ -30,7 +30,7 @@ export default function Particles() {
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       particles = Array.from({ length: 100 }, () => {
         const angle = Math.random() * Math.PI * 2;
-        const velocity = 0.08 + Math.random() * 0.28;
+        const velocity = 0.025 + Math.random() * 0.08;
         return {
           x: Math.random() * width,
           y: Math.random() * height,
@@ -63,22 +63,22 @@ export default function Particles() {
         particle.vx *= 0.9995;
         particle.vy *= 0.9995;
         const speed = Math.hypot(particle.vx, particle.vy);
-        if (speed < 0.12) {
+        if (speed < 0.04) {
           const angle = Math.random() * Math.PI * 2;
-          particle.vx = Math.cos(angle) * 0.16;
-          particle.vy = Math.sin(angle) * 0.16;
-        } else if (speed > 0.45) {
-          particle.vx = (particle.vx / speed) * 0.45;
-          particle.vy = (particle.vy / speed) * 0.45;
+          particle.vx = Math.cos(angle) * 0.06;
+          particle.vy = Math.sin(angle) * 0.06;
+        } else if (speed > 0.16) {
+          particle.vx = (particle.vx / speed) * 0.16;
+          particle.vy = (particle.vy / speed) * 0.16;
         }
-        particle.x += particle.vx * delta * 4.5;
-        particle.y += particle.vy * delta * 4.5;
+        particle.x += particle.vx * delta * 3.5;
+        particle.y += particle.vy * delta * 3.5;
         if (particle.x < -8) particle.x = width + 8;
         if (particle.x > width + 8) particle.x = -8;
         if (particle.y < -8) particle.y = height + 8;
         if (particle.y > height + 8) particle.y = -8;
 
-        const twinkle = 0.52 + (Math.sin(time * 0.0025 + particle.phase) + 1) * 0.16;
+        const twinkle = 0.52 + (Math.sin(time * 0.0018 + particle.phase) + 1) * 0.16;
         const glow = context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius * 2.4);
         glow.addColorStop(0, `${particle.color}${Math.round(twinkle * 140).toString(16).padStart(2, "0")}`);
         glow.addColorStop(1, `${particle.color}00`);
