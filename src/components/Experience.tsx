@@ -1,8 +1,9 @@
 "use client";
 
+
 export default function Experience() {
   return (
-    <section id="experience" className="section reveal">
+    <section id="experience" className="section">
       <div className="max-w-[1000px] mx-auto px-6">
         <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Work Experience

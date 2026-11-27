@@ -198,7 +198,7 @@ export default function Projects() {
   };
 
   return (
-    <section id="projects" className="section reveal">
+    <section id="projects" className="section">
       <div className="max-w-[1000px] mx-auto px-6">
         <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Projects

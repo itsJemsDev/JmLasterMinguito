@@ -1,5 +1,6 @@
 "use client";
 
+
 const educationData = [
   {
     school: "Sultan Kudarat State University",
@@ -29,7 +30,7 @@ const iconSvgs: Record<string, string> = {
 
 export default function Education() {
   return (
-    <section id="education" className="section reveal">
+    <section id="education" className="section">
       <div className="max-w-[1000px] mx-auto px-6">
         <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
           Education

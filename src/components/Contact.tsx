@@ -1,29 +1,45 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [contactFormOpen, setContactFormOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [formError, setFormError] = useState("");
   const captchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setShowModal(false);
+    const openContactForm = () => {
+      setSubmitted(false);
+      setContactFormOpen(true);
     };
-    if (showModal) {
-      document.addEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "hidden";
-    }
+    window.addEventListener("open-contact-modal", openContactForm);
+    return () => window.removeEventListener("open-contact-modal", openContactForm);
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setContactFormOpen(false);
+        setShowModal(false);
+      }
+    };
+    const shouldLockScroll = contactFormOpen || showModal;
+    if (!shouldLockScroll) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
-  }, [showModal]);
+  }, [contactFormOpen, showModal]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -63,10 +79,10 @@ export default function Contact() {
       }
 
       setSubmitted(true);
+      setContactFormOpen(false);
       setShowModal(true);
       setFormData({ name: "", email: "", message: "" });
       captchaRef.current?.reset();
-      setTimeout(() => setSubmitted(false), 3000);
     } catch {
       setFormError("Something went wrong. Please try again.");
       captchaRef.current?.reset();
@@ -76,64 +92,35 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section reveal">
-      <div className="max-w-[1000px] mx-auto px-6">
-        <h2 className="font-[family-name:var(--font-sans)] text-[1.3rem] font-semibold mb-10 tracking-tight relative inline-block">
-          Let&apos;s Connect
-          <span className="absolute -bottom-2 left-0 w-12 h-[3px] bg-[var(--color-accent)] rounded-full" />
-        </h2>
-
-        <p className="text-[var(--color-text-muted)] text-base mb-8 reveal-sm" style={{ transitionDelay: "0.2s" }}>
-          Open for collaborations, internships, and exciting projects.
-        </p>
-
-        <div className="flex flex-wrap gap-4">
-          <a
-            href="mailto:jmlasterminguito@gmail.com"
-            className="contact-item-comp reveal-sm"
-            style={{ transitionDelay: "0.1s" }}
-          >
-            <span className="contact-icon-comp">
-              <MailIcon />
-            </span>
-            <span>Email</span>
-          </a>
-          <a
-            href="https://github.com/Jems-maker"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="contact-item-comp reveal-sm"
-            style={{ transitionDelay: "0.2s" }}
-          >
-            <span className="contact-icon-comp contact-icon-github">
-              <GithubIcon />
-            </span>
-            <span>GitHub</span>
-          </a>
-          <a
-            href="https://www.facebook.com/JmMinguitoDev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="contact-item-comp reveal-sm"
-            style={{ transitionDelay: "0.3s" }}
-          >
-            <span className="contact-icon-comp contact-icon-facebook">
-              <FacebookIcon />
-            </span>
-            <span>Facebook</span>
-          </a>
-        </div>
-
-        {/* macOS-inspired contact window */}
-        <div className="mt-16 reveal-sm" style={{ transitionDelay: "0.4s" }}>
-          <div className="terminal-window">
+    <>
+      {contactFormOpen ? (
+        createPortal(
+        <div
+          className="modal-overlay contact-form-overlay"
+          onClick={() => setContactFormOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="contact-form-title"
+        >
+          <div className="contact-form-dialog" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="contact-dialog-close"
+              onClick={() => setContactFormOpen(false)}
+              aria-label="Close contact form"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="m18 6-12 12M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="terminal-window">
             <div className="terminal-titlebar">
               <div className="terminal-dots" role="img" aria-label="Window controls">
                 <span className="terminal-dot terminal-dot-red" title="Close" />
                 <span className="terminal-dot terminal-dot-yellow" title="Minimize" />
                 <span className="terminal-dot terminal-dot-green" title="Maximize" />
               </div>
-              <span className="terminal-title">Contact Form</span>
+              <span id="contact-form-title" className="terminal-title">Contact Form</span>
             </div>
 
             <div className="terminal-body">
@@ -237,10 +224,13 @@ export default function Contact() {
               </form>
             </div>
           </div>
+          </div>
         </div>
-      </div>
+        , document.body)
+      ) : null}
 
       {showModal ? (
+        createPortal(
         <div
           className="modal-overlay"
           onClick={() => setShowModal(false)}
@@ -267,8 +257,9 @@ export default function Contact() {
             </button>
           </div>
         </div>
+        , document.body)
       ) : null}
-    </section>
+    </>
   );
 }
 
@@ -280,28 +271,3 @@ function CheckIcon() {
   );
 }
 
-function MailIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <rect width="20" height="16" x="2" y="4" rx="2" />
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
-  );
-}
-
-function GithubIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-    </svg>
-  );
-}

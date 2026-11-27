@@ -1,15 +1,8 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 import "./globals.css";
-import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Loader from "@/components/Loader";
-
-const geist = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+import Particles from "@/components/Particles";
 
 export const metadata: Metadata = {
   title: "Jm Laster D. Minguito",
@@ -24,19 +17,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={geist.variable}
-    >
+    <html lang="en">
       <head>
         <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
       </head>
       <body className="bg-[var(--color-bg)] text-[var(--color-text)] overflow-x-hidden">
-        <Loader />
+        <Particles />
         <Navbar />
-        <ScrollRevealProvider>
-          <main>{children}</main>
-        </ScrollRevealProvider>
+        <main>{children}</main>
         <Footer />
       </body>
     </html>
