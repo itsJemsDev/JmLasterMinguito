@@ -97,7 +97,7 @@ main {
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
   overflow-y: hidden;
-  touch-action: pan-x;
+  touch-action: pan-x pan-y;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -286,7 +286,7 @@ main {
   padding: 8px 18px;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
-  background: transparent;
+  background: rgba(3, 8, 4, 0.82);
   color: var(--color-text-muted);
   font-family: inherit;
   font-size: 0.85rem;
@@ -295,14 +295,14 @@ main {
   white-space: nowrap;
 }
 .filter-btn-comp:hover {
-  border-color: var(--color-accent-mid);
-  color: var(--color-accent);
-  background: var(--color-accent-light);
+  border-color: rgba(0, 255, 0, 0.35);
+  color: #c9e8c9;
+  background: rgba(8, 22, 9, 0.94);
 }
 .filter-btn-comp.active {
-  background: var(--color-accent);
-  color: var(--color-bg);
-  border-color: var(--color-accent);
+  background: rgba(0, 45, 8, 0.92);
+  color: #8bff8b;
+  border-color: rgba(0, 255, 0, 0.4);
 }
 
 /* ===== Carousel Navigation ===== */

@@ -105,7 +105,14 @@ export default function Projects() {
     };
   }, [activeFilter, userInteracted]);
 
-  const updateDots = () => {
+  // When a category changes, reset the newly rendered card list to its first card.
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+    carousel.scrollLeft = 0;
+  }, [activeFilter]);
+
+  const updateDots = useCallback(() => {
     const carousel = carouselRef.current;
     if (!carousel) return;
     const cards = carousel.querySelectorAll(".project-card-comp");
@@ -129,7 +136,7 @@ export default function Projects() {
       if (i === activeIdx) dot.classList.add("active");
       else dot.classList.remove("active");
     });
-  };
+  }, []);
 
   // Mouse drag
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -163,10 +170,6 @@ export default function Projects() {
   const handleFilterClick = (value: string) => {
     setActiveFilter(value);
     setUserInteracted(true);
-    // Reset scroll when filter changes
-    if (carouselRef.current) {
-      carouselRef.current.scrollTo({ left: 0, behavior: "smooth" });
-    }
   };
 
   return (
@@ -182,6 +185,7 @@ export default function Projects() {
             <button
               key={f.value}
               onClick={() => handleFilterClick(f.value)}
+              aria-pressed={activeFilter === f.value}
               className={`filter-btn-comp ${activeFilter === f.value ? "active" : ""}`}
             >
               {f.label}
