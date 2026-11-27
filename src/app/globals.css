@@ -59,6 +59,38 @@ body > main,
 body > header,
 body > footer { position: relative; z-index: 1; }
 
+main {
+  animation: page-start-fade .95s cubic-bezier(.2,.7,.2,1) both;
+}
+.reference-navbar {
+  animation: navbar-start-motion .75s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes page-start-fade {
+  from { opacity: 0; transform: translate3d(0, 30px, 0) scale(.985); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes navbar-start-motion {
+  from { opacity: 0; translate: 0 -18px; }
+  to { opacity: 1; translate: 0 0; }
+}
+.reference-hero > * {
+  opacity: 0;
+  animation: hero-item-motion .72s cubic-bezier(.2,.7,.2,1) both;
+}
+.reference-hero > .hero-identity-pill { animation-delay: .08s; }
+.reference-hero > .reference-hero-title { animation-delay: .18s; }
+.reference-hero > .reference-hero-description { animation-delay: .31s; }
+.reference-hero > .reference-hero-button { animation-delay: .44s; }
+@keyframes hero-item-motion {
+  from { opacity: 0; translate: 0 22px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  main,
+  .reference-navbar,
+  .reference-hero > * { animation: none; opacity: 1; translate: none; }
+}
+
 /* ===== Carousel Styles ===== */
 .projects-carousel {
   scroll-behavior: smooth;
@@ -803,6 +835,16 @@ body > footer { position: relative; z-index: 1; }
 .hero-portrait-label > span { width: 7px; height: 7px; }
 .section { padding: clamp(64px, 9vw, 112px) 0; }
 .section > div { max-width: 1160px; }
+.scroll-reveal-ready {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1);
+  will-change: opacity, transform;
+}
+.scroll-reveal-ready.scroll-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
 .section h2 {
   font-size: clamp(1.8rem, 3.2vw, 2.6rem) !important;
   font-weight: 600 !important;

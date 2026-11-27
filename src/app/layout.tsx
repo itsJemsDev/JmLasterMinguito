@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Particles from "@/components/Particles";
+import ScrollRevealProvider from "@/components/ScrollRevealProvider";
 
 export const metadata: Metadata = {
   title: "Jm Laster D. Minguito",
@@ -24,7 +25,9 @@ export default function RootLayout({
       <body className="bg-[var(--color-bg)] text-[var(--color-text)] overflow-x-hidden">
         <Particles />
         <Navbar />
-        <main>{children}</main>
+        <ScrollRevealProvider>
+          <main>{children}</main>
+        </ScrollRevealProvider>
         <Footer />
       </body>
     </html>
