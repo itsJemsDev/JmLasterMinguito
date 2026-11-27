@@ -30,7 +30,7 @@ export default function Particles() {
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
       particles = Array.from({ length: 100 }, () => {
         const angle = Math.random() * Math.PI * 2;
-        const velocity = 0.035 + Math.random() * 0.13;
+        const velocity = 0.08 + Math.random() * 0.28;
         return {
           x: Math.random() * width,
           y: Math.random() * height,
@@ -69,7 +69,7 @@ export default function Particles() {
         if (particle.y < -8) particle.y = height + 8;
         if (particle.y > height + 8) particle.y = -8;
 
-        const twinkle = 0.52 + (Math.sin(time * 0.0015 + particle.phase) + 1) * 0.16;
+        const twinkle = 0.52 + (Math.sin(time * 0.0025 + particle.phase) + 1) * 0.16;
         const glow = context.createRadialGradient(particle.x, particle.y, 0, particle.x, particle.y, particle.radius * 2.4);
         glow.addColorStop(0, `${particle.color}${Math.round(twinkle * 140).toString(16).padStart(2, "0")}`);
         glow.addColorStop(1, `${particle.color}00`);
