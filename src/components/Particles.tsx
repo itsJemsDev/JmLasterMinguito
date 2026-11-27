@@ -60,8 +60,17 @@ export default function Particles() {
           particle.vx += (dx / distance) * force;
           particle.vy += (dy / distance) * force;
         }
-        particle.vx *= 0.995;
-        particle.vy *= 0.995;
+        particle.vx *= 0.9995;
+        particle.vy *= 0.9995;
+        const speed = Math.hypot(particle.vx, particle.vy);
+        if (speed < 0.12) {
+          const angle = Math.random() * Math.PI * 2;
+          particle.vx = Math.cos(angle) * 0.16;
+          particle.vy = Math.sin(angle) * 0.16;
+        } else if (speed > 0.45) {
+          particle.vx = (particle.vx / speed) * 0.45;
+          particle.vy = (particle.vy / speed) * 0.45;
+        }
         particle.x += particle.vx * delta * 4.5;
         particle.y += particle.vy * delta * 4.5;
         if (particle.x < -8) particle.x = width + 8;
