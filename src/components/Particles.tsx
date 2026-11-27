@@ -36,7 +36,7 @@ export default function Particles() {
           y: Math.random() * height,
           vx: Math.cos(angle) * velocity,
           vy: Math.sin(angle) * velocity,
-          radius: 1 + Math.random() * 1.7,
+          radius: 2.5 + Math.random() * 3.5,
           color: colors[Math.floor(Math.random() * colors.length)],
           phase: Math.random() * Math.PI * 2,
         };
