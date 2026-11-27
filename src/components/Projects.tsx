@@ -107,14 +107,20 @@ export default function Projects() {
     const carousel = carouselRef.current;
     if (!carousel) return;
     const cards = carousel.querySelectorAll(".project-card-comp");
-    const dots = document.querySelectorAll(".carousel-dot-comp");
+    const dots = carousel.parentElement?.parentElement?.querySelectorAll(".carousel-dot-comp");
+    if (!dots?.length) return;
     const center = carousel.scrollLeft + carousel.clientWidth / 2;
     let activeIdx = 0;
+    let nearestDistance = Number.POSITIVE_INFINITY;
 
     cards.forEach((card, i) => {
       const el = card as HTMLElement;
-      const cardCenter = el.offsetLeft + el.offsetWidth / 2;
-      if (cardCenter <= center) activeIdx = i;
+      const cardCenter = el.offsetLeft - carousel.offsetLeft + el.offsetWidth / 2;
+      const distance = Math.abs(cardCenter - center);
+      if (distance < nearestDistance) {
+        nearestDistance = distance;
+        activeIdx = i;
+      }
     });
 
     dots.forEach((dot, i) => {
@@ -127,7 +133,7 @@ export default function Projects() {
   const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setUserInteracted(true);
-    dragStartX.current = e.screenX;
+    dragStartX.current = e.clientX;
     if (carouselRef.current) {
       dragStartScroll.current = carouselRef.current.scrollLeft;
       carouselRef.current.classList.add("grabbing");
@@ -137,55 +143,19 @@ export default function Projects() {
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !carouselRef.current) return;
     e.preventDefault();
-    const diff = e.screenX - dragStartX.current;
+    const diff = e.clientX - dragStartX.current;
     carouselRef.current.scrollLeft = dragStartScroll.current - diff;
   };
 
-  const handleMouseUp = (e: React.MouseEvent) => {
+  const handleMouseUp = () => {
     if (!isDragging || !carouselRef.current) return;
     setIsDragging(false);
     carouselRef.current.classList.remove("grabbing");
-
-    const diff = e.screenX - dragStartX.current;
-    if (Math.abs(diff) < 30) return;
-
-    const visibleCards = Array.from(carouselRef.current.querySelectorAll(".project-card-comp"));
-    if (visibleCards.length === 0) return;
-    const cardWidth = (visibleCards[0] as HTMLElement).offsetWidth + 24;
-
-    if (diff < -50) {
-      carouselRef.current.scrollBy({ left: cardWidth, behavior: "smooth" });
-    } else if (diff > 50) {
-      carouselRef.current.scrollBy({ left: -cardWidth, behavior: "smooth" });
-    }
   };
 
   // Touch swipe
-  const touchStartX = useRef(0);
-  const touchStartScroll = useRef(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = () => {
     setUserInteracted(true);
-    touchStartX.current = e.touches[0].screenX;
-    if (carouselRef.current) {
-      touchStartScroll.current = carouselRef.current.scrollLeft;
-    }
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (!carouselRef.current) return;
-    const diffX = touchStartX.current - e.changedTouches[0].screenX;
-    if (Math.abs(diffX) < 30) return;
-
-    const visibleCards = Array.from(carouselRef.current.querySelectorAll(".project-card-comp"));
-    if (visibleCards.length === 0) return;
-    const cardWidth = (visibleCards[0] as HTMLElement).offsetWidth + 24;
-
-    if (diffX > 50) {
-      carouselRef.current.scrollBy({ left: cardWidth, behavior: "smooth" });
-    } else if (diffX < -50) {
-      carouselRef.current.scrollBy({ left: -cardWidth, behavior: "smooth" });
-    }
   };
 
   const handleFilterClick = (value: string) => {
@@ -249,7 +219,6 @@ export default function Projects() {
               }
             }}
             onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
             onScroll={updateDots}
           >
             {filteredProjects.map((project, i) => (

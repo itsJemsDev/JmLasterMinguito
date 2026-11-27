@@ -93,8 +93,11 @@ main {
 
 /* ===== Carousel Styles ===== */
 .projects-carousel {
+  box-sizing: border-box;
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
+  overflow-y: hidden;
+  touch-action: pan-x;
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
@@ -256,6 +259,7 @@ main {
   width: 320px;
   flex-shrink: 0;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
   transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   cursor: pointer;
   user-select: none;
@@ -271,10 +275,10 @@ main {
   transition: opacity 0.3s ease;
 }
 .project-card-comp:hover::before {
-  opacity: 1;
+  opacity: 0.08;
 }
 .project-card-comp:hover {
-  background: var(--color-accent-light);
+  background: linear-gradient(140deg, rgba(5,10,5,.98), rgba(2,5,2,.96) 48%, rgba(0,18,0,.93));
 }
 
 /* ===== Filter Buttons ===== */
@@ -347,6 +351,23 @@ main {
 }
 .carousel-dot-comp:hover {
   border-color: var(--color-accent-mid);
+}
+@media (max-width: 900px) {
+  .projects-carousel { width: 100%; }
+  .project-card-comp {
+    width: min(320px, calc(100vw - 72px));
+    min-width: min(280px, calc(100vw - 72px));
+  }
+  .carousel-nav-comp {
+    width: 34px;
+    height: 34px;
+    opacity: .95;
+    pointer-events: auto;
+    transform: none !important;
+    translate: 0 0 !important;
+  }
+  .carousel-nav-comp.absolute.left-0 { left: 6px; }
+  .carousel-nav-comp.absolute.right-0 { right: 6px; }
 }
 
 /* ===== Project Image Wrapper ===== */
@@ -738,7 +759,7 @@ main {
 }
 
 #education {
-  background: #000;
+  background: transparent;
   color: #e9f3e9;
 }
 #education h2 { color: #e9f3e9; }
